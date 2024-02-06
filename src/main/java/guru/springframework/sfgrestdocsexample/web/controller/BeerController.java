@@ -26,19 +26,19 @@ public class BeerController {
     public ResponseEntity<BeerDto> getBeerById(@PathVariable("beerId") UUID beerId){
 
 
-        return new ResponseEntity<>(beerMapper.BeerToBeerDto(beerRepository.findById(beerId).get()), HttpStatus.OK);
+        return new ResponseEntity<>(beerMapper.beerToBeerDto(beerRepository.findById(beerId).get()), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity saveNewBeer(@RequestBody @Validated BeerDto beerDto){
+    public ResponseEntity<Void> saveNewBeer(@RequestBody @Validated BeerDto beerDto){
 
-        beerRepository.save(beerMapper.BeerDtoToBeer(beerDto));
+        beerRepository.save(beerMapper.beerDtoToBeer(beerDto));
 
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{beerId}")
-    public ResponseEntity updateBeerById(@PathVariable("beerId") UUID beerId, @RequestBody @Validated BeerDto beerDto){
+    public ResponseEntity<Void> updateBeerById(@PathVariable("beerId") UUID beerId, @RequestBody @Validated BeerDto beerDto){
         beerRepository.findById(beerId).ifPresent(beer -> {
             beer.setBeerName(beerDto.getBeerName());
             beer.setBeerStyle(beerDto.getBeerStyle().name());
@@ -48,7 +48,7 @@ public class BeerController {
             beerRepository.save(beer);
         });
 
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
